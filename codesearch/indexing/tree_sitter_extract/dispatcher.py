@@ -5,13 +5,18 @@ from pathlib import Path
 from codesearch.indexing.languages import detect_language
 from codesearch.indexing.tree_sitter_extract import (
     fallback,
+    javascript,
     python,
+    typescript,
 )
 from codesearch.indexing.tree_sitter_extract.common import parse_tree
 from codesearch.indexing.tree_sitter_extract.models import ExtractedFile
 
 LANGUAGE_EXTRACTORS = {
     "python": python.extract,
+    "javascript": javascript.extract,
+    "typescript": typescript.extract,
+    "tsx": typescript.extract,
 }
 
 
