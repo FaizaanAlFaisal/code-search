@@ -4,12 +4,17 @@ from pathlib import Path
 
 from codesearch.indexing.languages import detect_language
 from codesearch.indexing.tree_sitter_extract import (
+    bash,
     c,
     cpp,
+    css,
     fallback,
+    html,
     javascript,
+    lua,
     python,
     rust,
+    sql,
     typescript,
 )
 from codesearch.indexing.tree_sitter_extract.common import parse_tree
@@ -23,6 +28,12 @@ LANGUAGE_EXTRACTORS = {
     "rust": rust.extract,
     "c": c.extract,
     "cpp": cpp.extract,
+    "bash": bash.extract,
+    "shell": bash.extract,
+    "html": html.extract,
+    "css": css.extract,
+    "lua": lua.extract,
+    "sql": sql.extract,
 }
 
 
