@@ -118,4 +118,48 @@ CREATE TABLE IF NOT EXISTS heuristic_flags (
   line_end INTEGER,
   rule_id TEXT NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS model_jobs (
+  id INTEGER PRIMARY KEY,
+  repo_id INTEGER NOT NULL REFERENCES repos(id) ON DELETE CASCADE,
+  target_type TEXT NOT NULL,
+  target_id INTEGER NOT NULL,
+  job_type TEXT NOT NULL,
+  model TEXT NOT NULL,
+  status TEXT NOT NULL,
+  priority INTEGER NOT NULL DEFAULT 100,
+  input_hash TEXT NOT NULL,
+  prompt_tokens_estimate INTEGER,
+  attempts INTEGER NOT NULL DEFAULT 0,
+  created_at TEXT NOT NULL,
+  started_at TEXT,
+  finished_at TEXT,
+  error TEXT
+);
+
+CREATE TABLE IF NOT EXISTS model_outputs (
+  id INTEGER PRIMARY KEY,
+  job_id INTEGER NOT NULL REFERENCES model_jobs(id) ON DELETE CASCADE,
+  target_type TEXT NOT NULL,
+  target_id INTEGER NOT NULL,
+  model TEXT NOT NULL,
+  output_type TEXT NOT NULL,
+  json_text TEXT NOT NULL,
+  accepted INTEGER NOT NULL DEFAULT 0,
+  rejected_reason TEXT,
+  created_at TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS vector_records (
+  id INTEGER PRIMARY KEY,
+  repo_id INTEGER NOT NULL REFERENCES repos(id) ON DELETE CASCADE,
+  target_type TEXT NOT NULL,
+  target_id INTEGER NOT NULL,
+  vector_collection TEXT NOT NULL,
+  vector_point_id TEXT NOT NULL UNIQUE,
+  text_hash TEXT NOT NULL,
+  text_kind TEXT NOT NULL,
+  embedded_model TEXT NOT NULL,
+  embedded_at TEXT NOT NULL
+);
 """
