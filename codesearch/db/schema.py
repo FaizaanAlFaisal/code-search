@@ -54,4 +54,56 @@ CREATE TABLE IF NOT EXISTS path_audit (
   updated_at TEXT NOT NULL,
   UNIQUE(repo_id, path)
 );
+
+CREATE TABLE IF NOT EXISTS file_facts (
+  id INTEGER PRIMARY KEY,
+  file_id INTEGER NOT NULL REFERENCES files(id) ON DELETE CASCADE,
+  fact_type TEXT NOT NULL,
+  value TEXT NOT NULL,
+  line_start INTEGER,
+  line_end INTEGER,
+  confidence TEXT NOT NULL DEFAULT 'primary'
+);
+
+CREATE TABLE IF NOT EXISTS symbols (
+  id INTEGER PRIMARY KEY,
+  file_id INTEGER NOT NULL REFERENCES files(id) ON DELETE CASCADE,
+  repo_id INTEGER NOT NULL REFERENCES repos(id) ON DELETE CASCADE,
+  name TEXT NOT NULL,
+  qualified_name TEXT NOT NULL,
+  symbol_ref TEXT NOT NULL,
+  symbol_type TEXT NOT NULL,
+  signature TEXT,
+  decorators TEXT,
+  docstring TEXT,
+  line_start INTEGER NOT NULL,
+  line_end INTEGER NOT NULL,
+  byte_start INTEGER NOT NULL,
+  byte_end INTEGER NOT NULL,
+  parent_symbol_id INTEGER REFERENCES symbols(id),
+  exported INTEGER NOT NULL DEFAULT 0,
+  primary_text TEXT NOT NULL,
+  UNIQUE(file_id, qualified_name, line_start)
+);
+
+CREATE TABLE IF NOT EXISTS symbol_calls (
+  id INTEGER PRIMARY KEY,
+  symbol_id INTEGER NOT NULL REFERENCES symbols(id) ON DELETE CASCADE,
+  call_text TEXT NOT NULL,
+  receiver TEXT,
+  function_name TEXT,
+  line_start INTEGER NOT NULL,
+  line_end INTEGER NOT NULL,
+  resolved_symbol_id INTEGER REFERENCES symbols(id),
+  resolution_status TEXT NOT NULL DEFAULT 'unresolved'
+);
+
+CREATE TABLE IF NOT EXISTS symbol_literals (
+  id INTEGER PRIMARY KEY,
+  symbol_id INTEGER NOT NULL REFERENCES symbols(id) ON DELETE CASCADE,
+  literal_type TEXT NOT NULL,
+  value TEXT NOT NULL,
+  line_start INTEGER NOT NULL,
+  line_end INTEGER NOT NULL
+);
 """
