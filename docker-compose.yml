@@ -1,11 +1,13 @@
 # Backing services for code-search. The CLI itself runs on the host (it reads
-# your source tree directly); qdrant provides the vector store it talks to over
-# HTTP.
+# your source tree directly); these containers provide the vector store and the
+# local model server it talks to over HTTP.
 #
 #   docker compose up -d
+#   docker compose exec ollama ollama pull qwen3-embedding:4b
+#   docker compose exec ollama ollama pull qwen3.5:4b      # only needed for --enrich
 #
-# The default url in .env.example (127.0.0.1:6333) matches the published ports
-# below, so no extra config is needed when running the CLI on the host.
+# The default URLs in .env.example (127.0.0.1:6333 / :11434) match the published
+# ports below, so no extra config is needed when running the CLI on the host.
 
 services:
   qdrant:
@@ -21,3 +23,20 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+
+  ollama:
+    image: ollama/ollama:latest
+    restart: unless-stopped
+    ports:
+      - "11434:11434"
+    volumes:
+      - ./ollama_data:/root/.ollama
+    # GPU passthrough requires the NVIDIA Container Toolkit on the host.
+    # Remove this block to run Ollama on CPU.
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
