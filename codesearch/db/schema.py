@@ -106,4 +106,16 @@ CREATE TABLE IF NOT EXISTS symbol_literals (
   line_start INTEGER NOT NULL,
   line_end INTEGER NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS heuristic_flags (
+  id INTEGER PRIMARY KEY,
+  target_type TEXT NOT NULL,
+  target_id INTEGER NOT NULL,
+  flag TEXT NOT NULL,
+  evidence_type TEXT NOT NULL,
+  evidence_value TEXT NOT NULL,
+  line_start INTEGER,
+  line_end INTEGER,
+  rule_id TEXT NOT NULL
+);
 """
