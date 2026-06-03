@@ -1,0 +1,29 @@
+# ── Python ──
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# ── Virtualenvs ──
+.venv/
+venv/
+env/
+
+# ── Local config / secrets ──
+.env
+
+# ── Index & service data ──
+storage/
+*.db
+*.db-wal
+*.db-shm
+*.sqlite
+qdrant_storage/
+ollama_data/
+
+# ── Editor / OS ──
+.idea/
+.vscode/
+.DS_Store

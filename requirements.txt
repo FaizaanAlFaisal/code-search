@@ -1,0 +1,2 @@
+# Runtime dependencies. Qdrant and Ollama are reached over HTTP (no client libs).
+requests>=2.31

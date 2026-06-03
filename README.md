@@ -1,0 +1,7 @@
+# code-search
+
+A fast, low-token, **semantic + structural** code search CLI built for AI agents (and humans). It indexes a repository with tree-sitter, stores structure in SQLite (+ FTS5) and meaning in a local vector store, and answers questions by returning the *actual source of the most relevant symbols* — usually in a single call — instead of making an agent grep-and-read its way around.
+
+It runs fully locally: SQLite for structure, **Qdrant** for vectors, **Ollama** for embeddings. No data leaves your machine.
+
+---
