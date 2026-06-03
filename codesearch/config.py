@@ -4,6 +4,12 @@ import os
 from dataclasses import dataclass
 from pathlib import Path
 
+from dotenv import load_dotenv
+
+# Load repo-root .env each run. override=False so an explicitly-set environment var
+# (shell export, test harness, docker-compose `environment:`) wins over the file —
+# the file only fills in what isn't already set.
+load_dotenv(Path(__file__).resolve().parents[1] / ".env", override=False)
 
 def _int_env(name: str, default: int) -> int:
     try:
