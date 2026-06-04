@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
-# Public retrieval CLI: explore / find / search / open / refresh.
-# Relocatable — resolves the repo root from this script's location.
+# public retrieval CLI: explore / find / search / open / refresh.
+# Relocatable. Resolves the repo root from this script's location.
+
 set -euo pipefail
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 if [ -n "${CODE_SEARCH_PYTHON:-}" ]; then
@@ -12,4 +13,4 @@ else
 fi
 [ -f "$HERE/.env" ] && set -a && . "$HERE/.env" && set +a
 export PYTHONPATH="$HERE${PYTHONPATH:+:$PYTHONPATH}"
-exec "$PY" "$HERE/code_search_tool/cli.py" "$@"
+exec "$PY" "$HERE/codesearch/cli.py" "$@"

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Admin CLI: register / index / reindex / rules / model-queue / status.
-# Relocatable — resolves the repo root from this script's location.
+
 set -euo pipefail
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 if [ -n "${CODE_SEARCH_PYTHON:-}" ]; then
@@ -12,4 +12,4 @@ else
 fi
 [ -f "$HERE/.env" ] && set -a && . "$HERE/.env" && set +a
 export PYTHONPATH="$HERE${PYTHONPATH:+:$PYTHONPATH}"
-exec "$PY" "$HERE/code_search_tool/admin_cli.py" "$@"
+exec "$PY" "$HERE/codesearch/admin_cli.py" "$@"
