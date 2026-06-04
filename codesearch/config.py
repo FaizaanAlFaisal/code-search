@@ -32,6 +32,8 @@ class Settings:
     max_file_bytes: int
     respect_gitignore: bool
     model_commit_every: int
+    embed_batch_size: int
+    embed_num_batch: int
 
     @classmethod
     def from_env(cls) -> "Settings":
@@ -51,6 +53,11 @@ class Settings:
             # checkpoint model batches every N jobs: makes progress externally visible
             # (model-queue from another shell) and preserves completed work on interrupt
             model_commit_every=_int_env("CODE_SEARCH_COMMIT_EVERY", 50),
+            # embeddings per Ollama call (and per Qdrant bulk upsert). Bigger = faster
+            # cold index but more VRAM/context pressure; tune for your GPU.
+            embed_batch_size=_int_env("CODE_SEARCH_EMBED_BATCH", 32),
+            # llama.cpp num_batch (tokens per GPU forward pass); 0 = omit (Ollama default)
+            embed_num_batch=_int_env("CODE_SEARCH_EMBED_NUM_BATCH", 0),
         )
 
 
