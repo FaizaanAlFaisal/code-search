@@ -6,6 +6,28 @@ It runs fully locally: SQLite for structure, **Qdrant** for vectors, **Ollama** 
 
 ---
 
+## How it works
+
+```
+            ┌─────────────┐   tree-sitter    ┌──────────────────────┐
+ your repo ─┤  discovery  ├─ extract ───────▶│ SQLite: files,       │
+            │  + classify │  symbols/calls   │ symbols, calls, FTS5  │
+            └─────────────┘                  └──────────┬───────────┘
+                                                        │ embed (Ollama)
+                                                        ▼
+                                              ┌──────────────────────┐
+   query ──▶ FTS5 (BM25) ─┐   Reciprocal     │ Qdrant: symbol/file   │
+             vector search ┴── Rank Fusion ──▶│ vectors per repo      │
+                                              └──────────────────────┘
+```
+
+- **Structural index** — tree-sitter extracts symbols, call sites, literals, and module structure into SQLite. FTS5 (`porter unicode61`) gives BM25 lexical search, with identifier subword tokenization (camelCase / snake_case / kebab / SCREAMING all split at index time).
+- **Semantic index** — each symbol/file/module is embedded (Ollama) and stored in Qdrant.
+- **Hybrid retrieval** — lexical and vector candidates are fused with Reciprocal Rank Fusion, with test symbols demoted and evidence-based reranking.
+- **Optional enrichment** — an opt-in summary-model pass (`--enrich`) adds purpose/alias/query hints. Off by default; the default path is deterministic + embeddings only.
+
+---
+
 ## Requirements
 
 - Python **3.10+**
