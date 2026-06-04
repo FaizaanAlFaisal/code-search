@@ -31,6 +31,7 @@ class Settings:
     embed_keep_alive: str
     max_file_bytes: int
     respect_gitignore: bool
+    model_commit_every: int
 
     @classmethod
     def from_env(cls) -> "Settings":
@@ -47,6 +48,9 @@ class Settings:
             embed_keep_alive=os.getenv("CODE_SEARCH_EMBED_KEEP_ALIVE", "24h"),
             max_file_bytes=_int_env("CODE_SEARCH_MAX_FILE_BYTES", 524288),
             respect_gitignore=os.getenv("CODE_SEARCH_RESPECT_GITIGNORE", "true").lower() in {"1", "true", "yes"},
+            # checkpoint model batches every N jobs: makes progress externally visible
+            # (model-queue from another shell) and preserves completed work on interrupt
+            model_commit_every=_int_env("CODE_SEARCH_COMMIT_EVERY", 50),
         )
 
 
