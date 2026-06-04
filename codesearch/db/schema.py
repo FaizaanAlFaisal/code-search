@@ -205,4 +205,22 @@ CREATE VIRTUAL TABLE IF NOT EXISTS code_fts USING fts5(
   secondary_text,
   tokenize = 'porter unicode61'
 );
+
+-- Secondary indices for the retrieval/refresh hot path. Without these every
+-- non-unique filter is a full table scan, which only bites at repo scale
+-- (symbol_calls is the largest table and is joined on symbol_id everywhere).
+CREATE INDEX IF NOT EXISTS idx_symbols_repo_name ON symbols(repo_id, name);
+CREATE INDEX IF NOT EXISTS idx_symbols_repo_ref ON symbols(repo_id, symbol_ref);
+CREATE INDEX IF NOT EXISTS idx_symbols_file ON symbols(file_id);
+CREATE INDEX IF NOT EXISTS idx_symbol_calls_symbol ON symbol_calls(symbol_id);
+CREATE INDEX IF NOT EXISTS idx_symbol_calls_fn ON symbol_calls(function_name);
+CREATE INDEX IF NOT EXISTS idx_symbol_literals_symbol ON symbol_literals(symbol_id);
+CREATE INDEX IF NOT EXISTS idx_file_facts_file ON file_facts(file_id);
+CREATE INDEX IF NOT EXISTS idx_heuristic_flags_target ON heuristic_flags(target_type, target_id);
+CREATE INDEX IF NOT EXISTS idx_vector_records_target ON vector_records(repo_id, target_type, target_id);
+CREATE INDEX IF NOT EXISTS idx_model_jobs_status ON model_jobs(status, job_type);
+CREATE INDEX IF NOT EXISTS idx_model_jobs_target ON model_jobs(target_type, target_id);
+CREATE INDEX IF NOT EXISTS idx_model_outputs_target ON model_outputs(target_type, target_id);
+CREATE INDEX IF NOT EXISTS idx_module_files_file ON module_files(file_id);
+CREATE INDEX IF NOT EXISTS idx_search_cache_session ON search_results_cache(repo_id, session_key);
 """
