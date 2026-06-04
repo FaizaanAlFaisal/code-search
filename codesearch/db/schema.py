@@ -179,6 +179,20 @@ CREATE TABLE IF NOT EXISTS module_files (
   PRIMARY KEY(module_id, file_id)
 );
 
+CREATE TABLE IF NOT EXISTS search_results_cache (
+  id TEXT PRIMARY KEY,
+  repo_id INTEGER NOT NULL REFERENCES repos(id) ON DELETE CASCADE,
+  session_key TEXT NOT NULL,
+  target_type TEXT NOT NULL,
+  target_id INTEGER NOT NULL,
+  path TEXT NOT NULL,
+  symbol_ref TEXT,
+  line_start INTEGER NOT NULL,
+  line_end INTEGER NOT NULL,
+  query TEXT NOT NULL,
+  created_at TEXT NOT NULL
+);
+
 CREATE VIRTUAL TABLE IF NOT EXISTS code_fts USING fts5(
   record_type UNINDEXED,
   repo_slug UNINDEXED,
