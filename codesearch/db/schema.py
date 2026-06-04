@@ -162,4 +162,20 @@ CREATE TABLE IF NOT EXISTS vector_records (
   embedded_model TEXT NOT NULL,
   embedded_at TEXT NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS modules (
+  id INTEGER PRIMARY KEY,
+  repo_id INTEGER NOT NULL REFERENCES repos(id) ON DELETE CASCADE,
+  name TEXT NOT NULL,
+  path_prefix TEXT NOT NULL,
+  created_at TEXT NOT NULL,
+  updated_at TEXT NOT NULL,
+  UNIQUE(repo_id, path_prefix)
+);
+
+CREATE TABLE IF NOT EXISTS module_files (
+  module_id INTEGER NOT NULL REFERENCES modules(id) ON DELETE CASCADE,
+  file_id INTEGER NOT NULL REFERENCES files(id) ON DELETE CASCADE,
+  PRIMARY KEY(module_id, file_id)
+);
 """
