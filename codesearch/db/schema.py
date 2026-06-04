@@ -178,4 +178,17 @@ CREATE TABLE IF NOT EXISTS module_files (
   file_id INTEGER NOT NULL REFERENCES files(id) ON DELETE CASCADE,
   PRIMARY KEY(module_id, file_id)
 );
+
+CREATE VIRTUAL TABLE IF NOT EXISTS code_fts USING fts5(
+  record_type UNINDEXED,
+  repo_slug UNINDEXED,
+  target_id UNINDEXED,
+  path,
+  symbol,
+  module,
+  primary_text,
+  heuristic_text,
+  secondary_text,
+  tokenize = 'porter unicode61'
+);
 """
