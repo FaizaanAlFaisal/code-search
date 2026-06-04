@@ -34,6 +34,8 @@ class Settings:
     embed_keep_alive: str
     summary_keep_alive: str
     max_file_bytes: int
+    result_limit: int
+    cache_session_key: str
     respect_gitignore: bool
     model_commit_every: int
     embed_batch_size: int
@@ -59,6 +61,8 @@ class Settings:
             embed_keep_alive=os.getenv("CODE_SEARCH_EMBED_KEEP_ALIVE", "24h"),
             summary_keep_alive=os.getenv("CODE_SEARCH_SUMMARY_KEEP_ALIVE", "5m"),
             max_file_bytes=_int_env("CODE_SEARCH_MAX_FILE_BYTES", 524288),
+            result_limit=_int_env("CODE_SEARCH_RESULT_LIMIT", 5),
+            cache_session_key=os.getenv("CODE_SEARCH_SESSION_KEY", "default"),
             respect_gitignore=os.getenv("CODE_SEARCH_RESPECT_GITIGNORE", "true").lower() in {"1", "true", "yes"},
             # checkpoint model batches every N jobs: makes progress externally visible
             # (model-queue from another shell) and preserves completed work on interrupt
