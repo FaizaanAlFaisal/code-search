@@ -25,10 +25,14 @@ class Settings:
     ollama_url: str
     embed_model: str
     summary_model: str
+    summary_model_ctx: int
     embed_model_ctx: int
+    summary_model_think: bool
     num_gpu: int
+    summary_timeout: int
     embed_timeout: int
     embed_keep_alive: str
+    summary_keep_alive: str
     max_file_bytes: int
     respect_gitignore: bool
     model_commit_every: int
@@ -43,11 +47,17 @@ class Settings:
             ollama_url=os.getenv("CODE_SEARCH_OLLAMA_URL", os.getenv("OLLAMA_URL", "http://127.0.0.1:11434")).rstrip("/"),
             embed_model=os.getenv("CODE_SEARCH_EMBED_MODEL", "qwen3-embedding:4b"),
             summary_model=os.getenv("CODE_SEARCH_SUMMARY_MODEL", "qwen3.5:4b"),
+            summary_model_ctx=_int_env("CODE_SEARCH_SUMMARY_MODEL_CTX", 8192),
             embed_model_ctx=_int_env("CODE_SEARCH_EMBED_MODEL_CTX", 8192),
+            summary_model_think=os.getenv("CODE_SEARCH_SUMMARY_MODEL_THINK", "false").lower() in {"1", "true", "yes"},
             # 99 = pin all layers to gpu (auto-offload spills ~1gb at 8k); -1 auto, 0 cpu
             num_gpu=_int_env("CODE_SEARCH_NUM_GPU", 99),
+            # request timeouts (s); summary at 8k can exceed the old 120s
+            summary_timeout=_int_env("CODE_SEARCH_SUMMARY_TIMEOUT", 300),
             embed_timeout=_int_env("CODE_SEARCH_EMBED_TIMEOUT", 120),
+            # keep embed warm (search hot path); let the reasoning model idle out fast
             embed_keep_alive=os.getenv("CODE_SEARCH_EMBED_KEEP_ALIVE", "24h"),
+            summary_keep_alive=os.getenv("CODE_SEARCH_SUMMARY_KEEP_ALIVE", "5m"),
             max_file_bytes=_int_env("CODE_SEARCH_MAX_FILE_BYTES", 524288),
             respect_gitignore=os.getenv("CODE_SEARCH_RESPECT_GITIGNORE", "true").lower() in {"1", "true", "yes"},
             # checkpoint model batches every N jobs: makes progress externally visible
