@@ -143,3 +143,9 @@ All settings are environment variables with sensible defaults. See
 [.env.example](.env.example) for the annotated list: db path, service urls,
 models, gpu offload, timeouts, keep-alive, batch size, file-size cap, gitignore
 behavior, and progress and commit cadence.
+
+---
+
+## License
+
+MIT, copyright (c) 2026 FaizaanAlFaisal. See [LICENSE](LICENSE).
